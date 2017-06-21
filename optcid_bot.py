@@ -27,6 +27,7 @@ TOKEN = ''
 
 
 usuarios = [line.rstrip('\n') for line in open('users.txt')] 
+admins = [1896312]
 
 bot = telebot.TeleBot(TOKEN) 
 hora = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -57,7 +58,7 @@ def listener(messages):
 				mensaje += f"{{automagenta}}Mensaje:{{/magenta}} {m.text}\n"
 				mensaje += "{autoblack}-------------------------------{/black}\n"
 				
-			if(m.text.startswith("!") or m.text.startswith("/")):
+			if m.text.startswith("/"):
 				f = open('log.txt', 'a')
 				f.write(mensaje)
 				f.close()
@@ -126,23 +127,28 @@ def existeUserGru(uid,cid):
 	return EUG
 
 @bot.message_handler(commands=['id'])
-def command_idOP(m):
+def command_id(m):
 	cid = m.chat.id 
 	uname = m.from_user.username
 	uid = m.from_user.id
 	arrayl = []
-	if (m.text.capitalize().startswith("Japan")):
+	oioi = m.text.split(' ', 1)[1].capitalize()
+	print(oioi)
+	if (oioi.startswith("Japan")):
 		try:
-		
-			c.execute(f"SELECT idUsuario,NombreUsuario,idJapan FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
-		
-		
+			print("entro en el try")
+			c.execute(f"SELECT idUsuario,NombreUsuario,idJapanFROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
+			print("hago el for?")
 			for i in c:
+				print("1")
 				NombreUsuario_resultado = f'{i[1]}: '
+				print("2)" + str(NombreUsuario_resultado))
 				idOP_resultado = i[2]
-				p = NombreUsuario_resultado + idOP_resultado
+				print("3)" + str(idOP_resultado))
+				p = str(NombreUsuario_resultado) + str(idOP_resultado)
+				print("4" + str(p))
 				arrayl.append(p)
-			
+				print("5")
 			f = str(arrayl).replace(" '","").replace("'","")
 			f = f.replace(",", "\n").replace("[","").replace("]","")
 			print(arrayl)
@@ -152,7 +158,7 @@ def command_idOP(m):
 		except:
 			bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
 			
-	elif (m.text.capitalize().startswith("Global")):
+	elif (oioi.startswith("Global")):
 		try:
 		
 			c.execute(f"SELECT idUsuario,NombreUsuario,idGlobal FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
@@ -172,8 +178,8 @@ def command_idOP(m):
 		
 		except:
 			bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
-		else:
-			bot.send_message(cid, "ElseError: The format of the command is `/id Region` where `Region` is `Japan` or `Global`.", parse_mode="Markdown")
+	else:
+		bot.send_message(cid, "ElseError: The format of the command is `/id Region` where `Region` is `Japan` or `Global`.", parse_mode="Markdown")
 
 @bot.message_handler(commands=['add'])
 def command_addidOP(m):
@@ -193,9 +199,8 @@ def command_addidOP(m):
 		print("VAMOS A LEERLO SIN TRY")
 		try:
 			idOP = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
-			#j = idOP.startswith("Japan")
-			#g = idOP.startswith("Global")
-			if (m.text.capitalize().startswith("Japan")):
+			print(idOP)
+			if (idOP.startswith("Japan")):
 				print(str(idOP))
 				print("Entro capitalizado. Voy a splitear.")
 				idOP = idOP.split("Japan", 1)[1]
@@ -250,7 +255,7 @@ def command_addidOP(m):
 							
 
 
-			elif (m.text.Capitalize().startswith("Global"))
+			elif (idOP.startswith("Global")):
 				print(str(idOP))
 				print("Entro capitalizado. Voy a splitear.")
 				idOP = idOP.split("Global", 1)[1]
@@ -317,9 +322,10 @@ def command_editidOP(m):
 		uname = f"{ufm} {ulm}"
 	else:
 		uname = m.from_user.username
-	if (m.text.capitalize().startswith("Japan")):
+	idOP = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+	print(idOP)
+	if (idOP.startswith("Japan")):
 		try:
-			idOP = m.text.split(' ', 1)[1].replace(" ","")
 			pattern = '^\d\d\d\d\d\d\d\d\d$'
 			idOP = idOP.split("Japan", 1)[1]
 			if re.match(pattern, idOP, flags=0):
@@ -338,11 +344,10 @@ def command_editidOP(m):
 			bot.send_message(cid, "ExceptError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 
 
-	if (m.text.capitalize().startswith("Global")):
+	if (idOP.startswith("Global")):
 		try:
-			idOP = m.text.split(' ', 1)[1].replace(" ","")
 			pattern = '^\d\d\d\d\d\d\d\d\d$'
-			idOP = idOP.split("Japan", 1)[1]
+			idOP = idOP.split("Global", 1)[1]
 			if re.match(pattern, idOP, flags=0):
 				try:
 				  c.execute(f"UPDATE Usuarios SET 'idGlobal' = '{idOP}','NombreUsuario'='@{uname}' WHERE idUsuario = {uid}")
@@ -369,33 +374,88 @@ def command_miidOP(m):
 		uname = f"{ufm} {ulm}"
 	else:
 		uname = m.from_user.username
+	idOP = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+	print(idOP)
+	if (idOP.startswith("Japan")):
+		try:
+			c.execute(f"SELECT NombreUsuario,idJapanfrom Usuarios WHERE idUsuario={uid}")
+			
+			for i in c:
+				NombreUsuario_resultado = f"{i[0]} "
+				idOP_resultado = i[1]
+				
+			bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
+			con.commit()
+		except:
+			bot.send_message(cid, "Your Japanese Pirate ID is not in the DB.", parse_mode = "Markdown")
+		
+		
+	elif (idOP.startswith("Global")):
+		try:
+			c.execute(f"SELECT NombreUsuario,idGlobal from Usuarios WHERE idUsuario={uid}")
+			
+			for i in c:
+				NombreUsuario_resultado = f"{i[0]} "
+				idOP_resultado = i[1]
+				
+			bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
+			con.commit()
+		except:
+			bot.send_message(cid, "Your Global Pirate ID is not in the DB.", parse_mode = "Markdown")
+	else:
+		bot.send_message(cid, "ElseError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 
-	if (m.text.capitalize().startswith("Japan")):
-	try:
-		c.execute(f"SELECT NombreUsuario,idJapan from Usuarios WHERE idUsuario={uid}")
-		
-		for i in c:
-			NombreUsuario_resultado = f"{i[0]} "
-			idOP_resultado = i[1]
-			
-		bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
-		con.commit()
-	except:
-		bot.send_message(cid, "Your Japanese Pirate ID is not in the DB.", parse_mode = "Markdown")
-		
-		
-	if (m.text.capitalize().startswith("Global")):
-	try:
-		c.execute(f"SELECT NombreUsuario,idGlobal from Usuarios WHERE idUsuario={uid}")
-		
-		for i in c:
-			NombreUsuario_resultado = f"{i[0]} "
-			idOP_resultado = i[1]
-			
-		bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
-		con.commit()
-	except:
-		bot.send_message(cid, "Your Global Pirate ID is not in the DB.", parse_mode = "Markdown")
+
+
+
+
+from config import *
+
+@bot.message_handler(commands=['exec'])
+def command_exec(m):
+    cid = m.chat.id
+    uid = m.from_user.id
+    #try:
+        #send_udp('exec')
+    #except Exception as e:
+    #    bot.send_message(1896312, send_exception(e), parse_mode="Markdown")
+    if not is_recent(m):
+        return None
+    if m.from_user.id in admins:
+        if len(m.text.split()) == 1:
+            bot.send_message(
+                cid,
+                "Uso: /exec _<code>_ - Ejecuta el siguiente bloque de código.",
+                parse_mode="Markdown")
+            return
+        cout = StringIO()
+        sys.stdout = cout
+        cerr = StringIO()
+        sys.stderr = cerr
+        code = ' '.join(m.text.split(' ')[1:])
+        try:
+            exec(code)
+        except Exception as e:
+            bot.send_message(cid, send_exception(e), parse_mode="Markdown")
+        else:
+            if cout.getvalue():
+                bot.send_message(cid, str(cout.getvalue()))
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        
+@bot.message_handler(commands=['restart'])
+def command_restart(m):
+	if m.from_user.id in admins:
+		try:
+			os.execl(sys.executable, sys.executable, *sys.argv)
+		except:
+			bot.send_message(cid, "Mal código tete")
+	else:
+		bot.send_message(cid, "Comando reservado a SU.")
+
+
+
+
 
 
 bot.skip_pending = True
