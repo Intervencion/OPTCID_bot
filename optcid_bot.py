@@ -19,11 +19,11 @@ print(Color(
     '{autored}[{/red}{autoyellow}+{/yellow}{autored}]{/red} {autocyan} Archivo principal importado.{/cyan}'))
 
 import sqlite3
-con = sqlite3.connect('pkmnbot.db',check_same_thread = False)
+con = sqlite3.connect('optc.db',check_same_thread = False)
 c = con.cursor()
 pkmn = ""
 
-TOKEN = '391531736:AAECYll8YaoF9bSqbPVrKT4NY-JjzzotKao' 
+TOKEN = '' 
 
 
 usuarios = [line.rstrip('\n') for line in open('users.txt')] 
