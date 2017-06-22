@@ -137,7 +137,7 @@ def command_id(m):
 	if (oioi.startswith("Japan")):
 		try:
 			print("entro en el try")
-			c.execute(f"SELECT idUsuario,NombreUsuario,idJapanFROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
+			c.execute(f"SELECT idUsuario,NombreUsuario,idJapan FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
 			print("hago el for?")
 			for i in c:
 				print("1")
@@ -378,7 +378,7 @@ def command_miidOP(m):
 	print(idOP)
 	if (idOP.startswith("Japan")):
 		try:
-			c.execute(f"SELECT NombreUsuario,idJapanfrom Usuarios WHERE idUsuario={uid}")
+			c.execute(f"SELECT NombreUsuario,idJapan from Usuarios WHERE idUsuario={uid}")
 			
 			for i in c:
 				NombreUsuario_resultado = f"{i[0]} "
