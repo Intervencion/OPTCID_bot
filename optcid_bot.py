@@ -8,7 +8,6 @@ import urllib
 import random
 import os
 import six
-import re
 import socket
 import requests
 from collections import OrderedDict
@@ -16,7 +15,8 @@ from colorclass import Color
 from io import StringIO
 
 print(Color(
-    '{autored}[{/red}{autoyellow}+{/yellow}{autored}]{/red} {autocyan} Archivo principal importado.{/cyan}'))
+    '{autored}[{/red}{autoyellow}+{/yellow}{autored}]{/red} {autocyan} OPTCID iniciado.{/cyan}'))
+
 
 import sqlite3
 con = sqlite3.connect('optc.db',check_same_thread = False)
@@ -31,6 +31,11 @@ admins = [1896312]
 
 bot = telebot.TeleBot(TOKEN) 
 hora = time.strftime("%Y-%m-%d %H:%M:%S")
+
+try:
+    bot.send_message(admins[0], "@OPTCID_bot ha sido encendido")
+except Exception as e:
+    bot.send_message(admins[0], str(e))
 
 def listener(messages):
 	for m in messages:
@@ -70,6 +75,16 @@ def listener(messages):
 bot.set_update_listener(listener)
 
 
+@bot.message_handler(commands=['start'])
+def command_start(m):
+	cid = m.chat.id
+	comandos = "Avaible commands:\n"
+	comandos += "/add - The format of the command is /`add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and `X` are numbers.\n"
+	comandos += "/edit - The format of the command is /`edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and `X` are numbers.\n"
+	comandos += "/id - The format of the command is `/id Region XXXXXXXXX` where `Region` is `Japan` or `Global`.\n"
+	comandos += "/myid - The format of the command is `/myid Region` where `Region` is `Japan` or `Global`."
+	bot.send_message(cid, comandos, parse_mode="Markdown")
+	
 @bot.message_handler(commands=['eg'])
 def command_eg(m):
 	cid = m.chat.id
@@ -132,53 +147,67 @@ def command_id(m):
 	uname = m.from_user.username
 	uid = m.from_user.id
 	arrayl = []
-	oioi = m.text.split(' ', 1)[1].capitalize()
-	print(oioi)
-	if (oioi.startswith("Japan")):
-		try:
-			print("entro en el try")
-			c.execute(f"SELECT idUsuario,NombreUsuario,idJapan FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
-			print("hago el for?")
-			for i in c:
-				print("1")
-				NombreUsuario_resultado = f'{i[1]}: '
-				print("2)" + str(NombreUsuario_resultado))
-				idOP_resultado = i[2]
-				print("3)" + str(idOP_resultado))
-				p = str(NombreUsuario_resultado) + str(idOP_resultado)
-				print("4" + str(p))
-				arrayl.append(p)
-				print("5")
-			f = str(arrayl).replace(" '","").replace("'","")
-			f = f.replace(",", "\n").replace("[","").replace("]","")
-			print(arrayl)
-			bot.send_message(cid, f'*{f}*', parse_mode = "Markdown")
-			con.commit()
-		
-		except:
-			bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
+	try:
+		oioi = m.text.split(' ', 1)[1].capitalize()
+		print(oioi)
+		if (oioi.startswith("Japan")):
+			try:
+				print("entro en el try")
+				c.execute(f"SELECT idUsuario,NombreUsuario,idJapan FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
+				print("hago el for?")
+				for i in c:
+					print("1")
+					Alias_resultado = f'{i[1]}: '
+					print("2)" + str(Alias_resultado))
+					btag_resultado = i[2]
+					print("3)" + str(btag_resultado))
+					p = f'*{Alias_resultado}* `{btag_resultado}`'
+					print("4" + str(p))
+					arrayl.append(p)
+					print("5")
+				f = str(arrayl).replace(" '","").replace("'","")
+				f = f.replace(",", "\n").replace("[","").replace("]","")
+				if not f:
+					f = "The DB is empty. Please add yourself with `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers."
+					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+					con.commit()
+				else:
+					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+					con.commit()
 			
-	elif (oioi.startswith("Global")):
-		try:
-		
-			c.execute(f"SELECT idUsuario,NombreUsuario,idGlobal FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
-		
-		
-			for i in c:
-				NombreUsuario_resultado = f'{i[1]}: '
-				idOP_resultado = i[2]
-				p = NombreUsuario_resultado + idOP_resultado
-				arrayl.append(p)
+			except:
+				bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
+				
+		elif (oioi.startswith("Global")):
+			try:
 			
-			f = str(arrayl).replace(" '","").replace("'","")
-			f = f.replace(",", "\n").replace("[","").replace("]","")
-			print(arrayl)
-			bot.send_message(cid, f'*{f}*', parse_mode = "Markdown")
-			con.commit()
-		
-		except:
-			bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
-	else:
+				c.execute(f"SELECT idUsuario,NombreUsuario,idGlobal FROM Usuarios INNER JOIN UsuGrupo ON Usuarios.idUsuario = UsuGrupo.idUsuarioFK WHERE UsuGrupo.idGrupoFK ='{cid}' ORDER BY NombreUsuario ASC")
+				print("hago el for?")
+				for i in c:
+					print("1")
+					Alias_resultado = f'{i[1]}: '
+					print("2)" + str(Alias_resultado))
+					btag_resultado = i[2]
+					print("3)" + str(btag_resultado))
+					p = f'*{Alias_resultado}* `{btag_resultado}`'
+					print("4" + str(p))
+					arrayl.append(p)
+					print("5")
+				f = str(arrayl).replace(" '","").replace("'","")
+				f = f.replace(",", "\n").replace("[","").replace("]","")
+				print(arrayl)
+				if not f:
+					f= "The DB is empty. Please add yourself with `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers."
+					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+				else:
+					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+					con.commit()
+			
+			except:
+				bot.send_message(cid, "An error ocurred. Report to @Intervencion.")
+		else:
+			bot.send_message(cid, "ElseError: The format of the command is `/id Region` where `Region` is `Japan` or `Global`.", parse_mode="Markdown")
+	except:
 		bot.send_message(cid, "ElseError: The format of the command is `/id Region` where `Region` is `Japan` or `Global`.", parse_mode="Markdown")
 
 @bot.message_handler(commands=['add'])
@@ -198,7 +227,7 @@ def command_addidOP(m):
 		print(str(cid))
 		print("VAMOS A LEERLO SIN TRY")
 		try:
-			idOP = m.text..replace(".", "").capitalize()
+			idOP = m.text.split(' ', 1)[1].replace(" ", "").replace(".", "").capitalize()
 			print(idOP)
 			if (idOP.startswith("Japan")):
 				print(str(idOP))
@@ -322,7 +351,7 @@ def command_editidOP(m):
 		uname = f"{ufm} {ulm}"
 	else:
 		uname = m.from_user.username
-	idOP = m.text..replace(".", "").capitalize()
+	idOP = m.text.split(' ', 1)[1].replace(" ", "").replace(".", "").capitalize()
 	print(idOP)
 	if (idOP.startswith("Japan")):
 		try:
@@ -335,13 +364,13 @@ def command_editidOP(m):
 				  con.commit()
 	
 				except sqlite3.Error:
-				  bot.send_message(cid, "ExceptError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+				  bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 			else:
 				
-				bot.send_message(cid, "ElseError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+				bot.send_message(cid, "ElseError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 		  
 		except:
-			bot.send_message(cid, "ExceptError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+			bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 
 
 	if (idOP.startswith("Global")):
@@ -355,13 +384,13 @@ def command_editidOP(m):
 				  con.commit()
 	
 				except sqlite3.Error:
-				  bot.send_message(cid, "ExceptError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+				  bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 			else:
 				
-				bot.send_message(cid, "ElseError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+				bot.send_message(cid, "ElseError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 		  
 		except:
-			bot.send_message(cid, "ExceptError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+			bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 
 
 @bot.message_handler(commands=['myid']) 
@@ -374,37 +403,39 @@ def command_miidOP(m):
 		uname = f"{ufm} {ulm}"
 	else:
 		uname = m.from_user.username
-	idOP = m.text.split(' ', 1)[1].replace(" ", "").replace(".", "").capitalize()
-	print(idOP)
-	if (idOP.startswith("Japan")):
-		try:
-			c.execute(f"SELECT NombreUsuario,idJapan from Usuarios WHERE idUsuario={uid}")
-			
-			for i in c:
-				NombreUsuario_resultado = f"{i[0]} "
-				idOP_resultado = i[1]
+	try:
+		idOP = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+		print(idOP)
+		if (idOP.startswith("Japan")):
+			try:
+				c.execute(f"SELECT NombreUsuario,idJapan from Usuarios WHERE idUsuario={uid}")
 				
-			bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
-			con.commit()
-		except:
-			bot.send_message(cid, "Your Japanese Pirate ID is not in the DB.", parse_mode = "Markdown")
-		
-		
-	elif (idOP.startswith("Global")):
-		try:
-			c.execute(f"SELECT NombreUsuario,idGlobal from Usuarios WHERE idUsuario={uid}")
+				for i in c:
+					NombreUsuario_resultado = f"{i[0]} "
+					idOP_resultado = i[1]
+					
+				bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
+				con.commit()
+			except:
+				bot.send_message(cid, "Your Japanese Pirate ID is not in the DB.", parse_mode = "Markdown")
 			
-			for i in c:
-				NombreUsuario_resultado = f"{i[0]} "
-				idOP_resultado = i[1]
+			
+		elif (idOP.startswith("Global")):
+			try:
+				c.execute(f"SELECT NombreUsuario,idGlobal from Usuarios WHERE idUsuario={uid}")
 				
-			bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
-			con.commit()
-		except:
-			bot.send_message(cid, "Your Global Pirate ID is not in the DB.", parse_mode = "Markdown")
-	else:
-		bot.send_message(cid, "ElseError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
-
+				for i in c:
+					NombreUsuario_resultado = f"{i[0]} "
+					idOP_resultado = i[1]
+					
+				bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
+				con.commit()
+			except:
+				bot.send_message(cid, "Your Global Pirate ID is not in the DB.", parse_mode = "Markdown")
+		else:
+			bot.send_message(cid, "ElseError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+	except:
+		bot.send_message(cid, "ExceptError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 
 
 
