@@ -198,7 +198,7 @@ def command_addidOP(m):
 		print(str(cid))
 		print("VAMOS A LEERLO SIN TRY")
 		try:
-			idOP = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+			idOP = m.text..replace(".", "").capitalize()
 			print(idOP)
 			if (idOP.startswith("Japan")):
 				print(str(idOP))
@@ -322,7 +322,7 @@ def command_editidOP(m):
 		uname = f"{ufm} {ulm}"
 	else:
 		uname = m.from_user.username
-	idOP = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+	idOP = m.text..replace(".", "").capitalize()
 	print(idOP)
 	if (idOP.startswith("Japan")):
 		try:
@@ -331,7 +331,7 @@ def command_editidOP(m):
 			if re.match(pattern, idOP, flags=0):
 				try:
 				  c.execute(f"UPDATE Usuarios SET 'idJapan' = '{idOP}','NombreUsuario'='@{uname}' WHERE idUsuario = {uid}")
-				  bot.send_message(cid, f"*{uname}* now have with Japanese Pirate ID *{idOP}*.", parse_mode = "Markdown")
+				  bot.send_message(cid, f"*{uname}* now have Japanese Pirate ID *{idOP}*.", parse_mode = "Markdown")
 				  con.commit()
 	
 				except sqlite3.Error:
@@ -351,7 +351,7 @@ def command_editidOP(m):
 			if re.match(pattern, idOP, flags=0):
 				try:
 				  c.execute(f"UPDATE Usuarios SET 'idGlobal' = '{idOP}','NombreUsuario'='@{uname}' WHERE idUsuario = {uid}")
-				  bot.send_message(cid, f"*{uname}* now have with Global  Pirate ID *{idOP}*.", parse_mode = "Markdown")
+				  bot.send_message(cid, f"*{uname}* now have Global  Pirate ID *{idOP}*.", parse_mode = "Markdown")
 				  con.commit()
 	
 				except sqlite3.Error:
@@ -374,7 +374,7 @@ def command_miidOP(m):
 		uname = f"{ufm} {ulm}"
 	else:
 		uname = m.from_user.username
-	idOP = m.text.split(' ', 1)[1].replace(" ", "").capitalize()
+	idOP = m.text.split(' ', 1)[1].replace(" ", "").replace(".", "").capitalize()
 	print(idOP)
 	if (idOP.startswith("Japan")):
 		try:
