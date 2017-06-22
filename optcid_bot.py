@@ -171,6 +171,10 @@ def command_id(m):
 					f = "The DB is empty. Please add yourself with `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers."
 					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
 					con.commit()
+				elif (f == None):
+					f = "The DB is empty. Please add yourself with `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers."
+					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+					con.commit()
 				else:
 					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
 					con.commit()
@@ -195,10 +199,14 @@ def command_id(m):
 					print("5")
 				f = str(arrayl).replace(" '","").replace("'","")
 				f = f.replace(",", "\n").replace("[","").replace("]","")
-				print(arrayl)
 				if not f:
-					f= "The DB is empty. Please add yourself with `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers."
+					f = "The DB is empty. Please add yourself with `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers."
 					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+					con.commit()
+				elif (f == None):
+					f = "The DB is empty. Please add yourself with `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers."
+					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
+					con.commit()
 				else:
 					bot.send_message(cid, f'{f}', parse_mode = "Markdown")
 					con.commit()
@@ -218,7 +226,10 @@ def command_addidOP(m):
 	ufm = m.from_user.first_name
 	ulm = m.from_user.last_name
 	if (m.from_user.username is None):
-		uname = f'{ufm} {ulm}'
+		if (ulm is None):
+			uname = ufm
+		else:
+			uname = f'{ufm} {ulm}'
 	else:
 		uname = m.from_user.username
 	if(cid>0):
@@ -346,31 +357,37 @@ def command_editidOP(m):
 	cid = m.chat.id
 	uid = m.from_user.id
 	ufm = m.from_user.first_name
-	ulm = m.from_user.first_name
+	ulm = m.from_user.last_name
 	if (m.from_user.username is None):
-		uname = f"{ufm} {ulm}"
+		if (ulm is None):
+			uname = ufm
+		else:
+			uname = f'{ufm} {ulm}'
 	else:
 		uname = m.from_user.username
-	idOP = m.text.split(' ', 1)[1].replace(" ", "").replace(".", "").capitalize()
-	print(idOP)
-	if (idOP.startswith("Japan")):
-		try:
-			pattern = '^\d\d\d\d\d\d\d\d\d$'
-			idOP = idOP.split("Japan", 1)[1]
-			if re.match(pattern, idOP, flags=0):
-				try:
-				  c.execute(f"UPDATE Usuarios SET 'idJapan' = '{idOP}','NombreUsuario'='@{uname}' WHERE idUsuario = {uid}")
-				  bot.send_message(cid, f"*{uname}* now have Japanese Pirate ID *{idOP}*.", parse_mode = "Markdown")
-				  con.commit()
-	
-				except sqlite3.Error:
-				  bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
-			else:
-				
-				bot.send_message(cid, "ElseError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
-		  
-		except:
-			bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+	try:
+		idOP = m.text.split(' ', 1)[1].replace(" ", "").replace(".", "").capitalize()
+		print(idOP)
+		if (idOP.startswith("Japan")):
+			try:
+				pattern = '^\d\d\d\d\d\d\d\d\d$'
+				idOP = idOP.split("Japan", 1)[1]
+				if re.match(pattern, idOP, flags=0):
+					try:
+					  c.execute(f"UPDATE Usuarios SET 'idJapan' = '{idOP}','NombreUsuario'='@{uname}' WHERE idUsuario = {uid}")
+					  bot.send_message(cid, f"*{uname}* now have Japanese Pirate ID *{idOP}*.", parse_mode = "Markdown")
+					  con.commit()
+		
+					except sqlite3.Error:
+					  bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+				else:
+					
+					bot.send_message(cid, "ElseError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+			  
+			except:
+				bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
+	except:
+		bot.send_message(cid, "ExceptError: The format of the command is `/edit Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 
 
 	if (idOP.startswith("Global")):
@@ -398,9 +415,12 @@ def command_miidOP(m):
 	cid = m.chat.id
 	uid = m.from_user.id
 	ufm = m.from_user.first_name
-	ulm = m.from_user.first_name
+	ulm = m.from_user.last_name
 	if (m.from_user.username is None):
-		uname = f"{ufm} {ulm}"
+		if (ulm is None):
+			uname = ufm
+		else:
+			uname = f'{ufm} {ulm}'
 	else:
 		uname = m.from_user.username
 	try:
@@ -413,9 +433,13 @@ def command_miidOP(m):
 				for i in c:
 					NombreUsuario_resultado = f"{i[0]} "
 					idOP_resultado = i[1]
-					
-				bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
-				con.commit()
+				
+				if (idOP_resultado == None):
+					bot.send_message(cid, f'Your Japanese Pirate ID is not in the DB.', parse_mode = "Markdown")
+					con.commit()
+				else:
+					bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
+					con.commit()
 			except:
 				bot.send_message(cid, "Your Japanese Pirate ID is not in the DB.", parse_mode = "Markdown")
 			
@@ -427,9 +451,13 @@ def command_miidOP(m):
 				for i in c:
 					NombreUsuario_resultado = f"{i[0]} "
 					idOP_resultado = i[1]
-					
-				bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
-				con.commit()
+				
+				if (idOP_resultado == None):
+					bot.send_message(cid, f'Your Global Pirate ID is not in the DB.', parse_mode = "Markdown")
+					con.commit()
+				else:
+					bot.send_message(cid, f'*{NombreUsuario_resultado}*: {idOP_resultado}', parse_mode = "Markdown")
+					con.commit()
 			except:
 				bot.send_message(cid, "Your Global Pirate ID is not in the DB.", parse_mode = "Markdown")
 		else:
