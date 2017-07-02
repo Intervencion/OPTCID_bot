@@ -23,7 +23,7 @@ con = sqlite3.connect('optc.db',check_same_thread = False)
 c = con.cursor()
 pkmn = ""
 
-TOKEN = '' 
+TOKEN = ""
 
 
 usuarios = [line.rstrip('\n') for line in open('users.txt')] 
@@ -33,9 +33,9 @@ bot = telebot.TeleBot(TOKEN)
 hora = time.strftime("%Y-%m-%d %H:%M:%S")
 
 try:
-    bot.send_message(admins[0], "@OPTCID_bot ha sido encendido")
+	bot.send_message(admins[0], "@OPTCID_bot ha sido encendido")
 except Exception as e:
-    bot.send_message(admins[0], str(e))
+	bot.send_message(admins[0], str(e))
 
 def listener(messages):
 	for m in messages:
@@ -44,15 +44,13 @@ def listener(messages):
 		uname = m.from_user.username
 		mct = m.chat.title
 		ufm = m.from_user.first_name
-		ulm = m.from_user.last_name
-			
+		ulm = m.from_user.last_name			
 		if m.text:
 			mensaje = f"{{autogreen}}User:{{/green}} {ufm}\n"
 			if cid < 0:
 				mensaje += f"{{autoyellow}}Chat:{{/yellow}} {mct}\n"
 				mensaje += f"{{autored}}Hora:{{/red}} {hora}\n"
 				mensaje += f"{{autocyan}}UserID:{{/cyan}} [{uid}]"
-			if cid < 0:
 				mensaje += f"{{autoblue}} ChatID:{{/blue}} [{cid}]"
 				mensaje += "\n"
 				mensaje += f"{{automagenta}}Mensaje:{{/magenta}} {m.text}\n"
@@ -71,6 +69,77 @@ def listener(messages):
 				patata.write(f'@{uname} [{uid}]\n')
 				patata.close()
 				print (Color(str(mensaje)))
+	#	if m.content_type == 'new_chat_members':
+			@bot.message_handler(func=lambda m: True, content_types=['new_chat_members'])
+			def on_user_joins(m):
+				cid = m.chat.id
+				mct = m.chat.title
+				bienvenida = ""
+				if(m.new_chat_member.username=="OPTCID_bot"):
+					l= 1
+				
+				else:
+					if (m.new_chat_member.username is None):
+						nmusername = ""
+						nmusername += m.new_chat_member.first_name
+						if (m.new_chat_member.last_name is not None):
+							nmusername += " "
+							nmusername += m.new_chat_member.last_name
+							mct = m.chat.title
+						else: 
+							mct = m.chat.title
+					else:
+						nmusername = "@" + m.new_chat_member.username
+					rules = ""
+					if str(cid) == "-1001089561912": #English#
+						bienvenida += f"Welcome to {mct} "
+						rules += "1) Speak English.\n"
+						rules += "2) Be nice.\n"
+						rules += "3) Don't spoil.\n"
+						rules += "4) Don't spam.\n"
+						rules += "5) No +18.\n"
+						rules += "6) No acc selling."
+						bot.send_message(cid, f"{bienvenida}{nmusername}\nPlease follow the rules\n{rules}", parse_mode = "Markdown")	
+					elif str(cid) == "-1001123740312": #asd#
+						print("asd")
+						bienvenida += f"Welcome to {mct} "
+						rules += "1) Speak English.\n"
+						rules += "2) Be nice.\n"
+						rules += "3) Don't spoil.\n"
+						rules += "4) Don't spam.\n"
+						rules += "5) No +18.\n"
+						rules += "6) No acc selling."
+						bot.send_message(cid, f"{bienvenida}{nmusername}\nPlease follow the rules\n{rules}", parse_mode = "Markdown")	
+					elif str(cid) == "-182480289": #asdasd#
+						print("asdasd")
+						bienvenida += f"Welcome to {mct} "
+						rules += "1) Speak English.\n"
+						rules += "2) Be nice.\n"
+						rules += "3) Don't spoil.\n"
+						rules += "4) Don't spam.\n"
+						rules += "5) No +18.\n"
+						rules += "6) No acc selling."
+						bot.send_message(cid, f"{bienvenida}{nmusername}\nPlease follow the rules\n{rules}", parse_mode = "Markdown")	
+					elif str(cid) == "-1001129068952": #Spain#
+						bienvenida += f"Bienvenidos a {mct} @"
+						rules += "1) Se amable.\n"
+						rules += "3) No spoilers.\n"
+						rules += "4) No spam.\n"
+						rules += "5) No +18.\n"
+						rules += "6) Nada de compra-venta de cuentas."
+						bot.send_message(cid, f"{bienvenida}{nmusername}\nPlease follow the rules\n{rules}", parse_mode = "Markdown")	
+					#elif str(cid) == "-1001131002544": #Italy#
+						#bienvenida += f"Welcome to {mct} @"
+						#rules = "1) speak English.\n"
+						#rules += "2) be nice.\n"
+						#rules += "3) don't spoil.\n"
+						#rules += "4) don't spam.\n"
+						#rules += "5) No +18.\n"
+						#rules += "6) No acc selling."
+						bot.send_message(cid, f"{bienvenida}{nmusername}\nPlease follow the rules\n{rules}", parse_mode = "Markdown")	
+					else:
+						print ("entro al else")
+						mct = m.chat.title
 
 bot.set_update_listener(listener)
 
