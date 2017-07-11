@@ -405,12 +405,9 @@ def command_addidOP(m):
 							print(f"El id del grupo {cid}")
 							EU = existeUser(uid)
 							if(EU == 0):
-								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idGlobal) VALUES ('{uid}','@{uname}','{idOP}')")
-								bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
-							else:
-								bot.send_message(cid, "You have already introduced your Global Pirate ID in this group, if you want to edit it use `/edit Global`", parse_mode="Markdown")
+								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}','@{uname}','{idOP}')")
 							print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0")
-							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK,Region) VALUES ('{uid}','{cid}','Global')")
+							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK, Region) VALUES ('{uid}','{cid}','Global')")
 							bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
 							con.commit()
 						except sqlite3.Error as e:
@@ -421,7 +418,8 @@ def command_addidOP(m):
 						try:
 							EU = existeUser(uid)
 							if(EU == 0):
-								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idGlobal) VALUES ('{uid}', '@{uname}','{idOP}')")
+								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}', '@{uname}','{idOP}')")
+								bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
 							else:
 								print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0 Y AHORA VOY A COMPROBAR EUG")
 								EUG = existeUserGru(uid,cid)
@@ -440,7 +438,6 @@ def command_addidOP(m):
 							bot.send_message(cid, "You have already introduced your Global Pirate ID in this group, if you want to edit it use `/edit Global`", parse_mode="Markdown")
 				else:
 					bot.send_message(cid, "ElseError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
-
 		except:
 			bot.send_message(cid, "ExceptError: The format of the command is `/add Region XXXXXXXXX` where `Region` is `Japan` or `Global` and X are numbers.", parse_mode="Markdown")
 
