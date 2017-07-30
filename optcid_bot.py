@@ -387,7 +387,7 @@ def command_addidOP(m):
 									bot.send_message(cid, "Error in EUG.")
 								con.commit()
 							else:
-								bot.send_message(-1001113426399, "patata", parse_mode="Markdown")
+								bot.send_message(cid, "You have already introduced your Japanese Pirate ID in this group, if you want to edit it use `/edit Japan`", parse_mode="Markdown")
 						except sqlite3.Error as e:
 							print(e)
 							bot.send_message(cid, "You have already introduced your Japanese Pirate ID in this group, if you want to edit it use `/edit Japan`", parse_mode="Markdown")
@@ -451,7 +451,7 @@ def command_addidOP(m):
 									bot.send_message(cid, "Error in EUG.")
 								con.commit()
 							else:
-								bot.send_message(-1001113426399, "patata", parse_mode="Markdown")
+								bot.send_message(cid, "You have already introduced your Global Pirate ID in this group, if you want to edit it use `/edit Global`", parse_mode="Markdown")
 						except sqlite3.Error as e:
 							print(e)
 							bot.send_message(cid, "You have already introduced your Global Pirate ID in this group, if you want to edit it use `/edit Global`", parse_mode="Markdown")
