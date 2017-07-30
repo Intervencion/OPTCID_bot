@@ -359,7 +359,6 @@ def command_addidOP(m):
 							EU = existeUser(uid)
 							if(EU == 0):
 								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}','@{uname}','{idOP}')")								
-								c.execute(f"UPDATE Usuarios SET 'idJapan' = '{idOP}','NombreUsuario'='@{uname}' WHERE idUsuario = '{uid}'")
 							print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0")
 							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK, Region) VALUES ('{uid}','{cid}',Japan)")
 							bot.send_message(cid, f"*{uname}* has been added to the DB with Japanese Pirate ID *{idOP}*.", parse_mode="Markdown")
