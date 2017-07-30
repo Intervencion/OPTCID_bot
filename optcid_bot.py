@@ -173,9 +173,13 @@ def existeGrupo(cid):
 	c.execute(f"SELECT COUNT(*) FROM GRUPO WHERE idGrupo ='{cid}'")
 	try:
 		for i in c:
-			print("Vamos a ver si el select de grupo ha devuelto algún elemento")
-			print(f'El resultado del select es: {i[0]}')
-			EG =i[0]
+			print("Vamos a ver si el select del Grupo ha devuelto algún elemento")
+			print(f"El resultado del select es: {i[0]}")
+			EG = i[0]
+#		r = c.fetchone()
+#		print("Vamos a ver si el select del Grupo ha devuelto algún elemento")
+#		print(f"El resultado del select es: {i[0]}")
+#		EG = r[0]
 	
 	except Exception as e:
 		print(e)
@@ -190,7 +194,11 @@ def existeUser(uid):
 		for i in c:
 			print("Vamos a ver si el select de Usuarios ha devuelto algún elemento")
 			print(f"El resultado del select es: {i[0]}")
-			EU =i[0]
+			EU = i[0]
+#		r = c.fetchone()
+#		print("Vamos a ver si el select de Usuarios ha devuelto algún elemento")
+#		print(f"El resultado del select es: {i[0]}")
+#		EU = r[0]
 	
 	except Exception as e:
 		print(e)
@@ -350,9 +358,10 @@ def command_addidOP(m):
 							print(f"El id del grupo {cid}")
 							EU = existeUser(uid)
 							if(EU == 0):
-								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}','@{uname}','{idOP}')")
+								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}','@{uname}','{idOP}')")								
+								c.execute(f"UPDATE Usuarios SET 'idJapan' = '{idOP}','NombreUsuario'='@{uname}' WHERE idUsuario = '{uid}'")
 							print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0")
-							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK, Region) VALUES ('{uid}','{cid}','Japan')")
+							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK, Region) VALUES ('{uid}','{cid}',Japan)")
 							bot.send_message(cid, f"*{uname}* has been added to the DB with Japanese Pirate ID *{idOP}*.", parse_mode="Markdown")
 							con.commit()
 						except sqlite3.Error as e:
@@ -364,20 +373,22 @@ def command_addidOP(m):
 							EU = existeUser(uid)
 							if(EU == 0):
 								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}', '@{uname}','{idOP}')")
-								bot.send_message(cid, f"*{uname}* has been added to the DB with Japanese Pirate ID *{idOP}*.", parse_mode="Markdown")
-							else:
+								#bot.send_message(cid, f"*{uname}* has been added to the DB with Japanese Pirate ID *{idOP}*.", parse_mode="Markdown")
+							#else:
 								print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0 Y AHORA VOY A COMPROBAR EUG")
 								EUG = existeUserGru(uid,cid)
 								print(f"Sabemos que EUG vale {EUG}")
 								if(EUG == 0):
 									print("Entro cuando no existe la combinación usuario - grupo")
-									c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK,Region) VALUES ('{uid}','{cid}','Japan')")
+									c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK,Region) VALUES ('{uid}','{cid}',Japan)")
 									bot.send_message(cid, f"*{uname}* has been added to the DB with Japanese Pirate ID *{idOP}*.", parse_mode="Markdown")
 								elif(EUG == 1):
 									bot.send_message(cid, "You have already introduced your Japanese Pirate ID in this group, if you want to edit it use `/edit Japan`", parse_mode="Markdown")
 								else:
 									bot.send_message(cid, "Error in EUG.")
 								con.commit()
+							else:
+								bot.send_message(-1001113426399, "patata", parse_mode="Markdown")
 						except sqlite3.Error as e:
 							print(e)
 							bot.send_message(cid, "You have already introduced your Japanese Pirate ID in this group, if you want to edit it use `/edit Japan`", parse_mode="Markdown")
@@ -403,10 +414,13 @@ def command_addidOP(m):
 						try:
 							c.execute(f"INSERT INTO Grupo (idGrupo,NombreGrup) VALUES ('{cid}','{mct}')")
 							print(f"El id del grupo {cid}")
+							bot.send_message(-1001113426399, f"El id del grupo {cid}", parse_mode="Markdown")
 							EU = existeUser(uid)
 							if(EU == 0):
-								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}','@{uname}','{idOP}')")
+								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idGlobal) VALUES ('{uid}','@{uname}','{idOP}')")
+								bot.send_message(-1001113426399, "EU = 0", parse_mode="Markdown")
 							print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0")
+							bot.send_message(-1001113426399, "ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0", parse_mode="Markdown")
 							c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK, Region) VALUES ('{uid}','{cid}','Global')")
 							bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
 							con.commit()
@@ -415,24 +429,30 @@ def command_addidOP(m):
 							bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
 					elif(EG == 1):
 						print("El grupo sí existe")
+						#bot.send_message(-1001113426399, "El grupo sí existe", parse_mode="Markdown")
 						try:
 							EU = existeUser(uid)
 							if(EU == 0):
-								c.execute(f"INSERT INTO Usuarios (idUsuario,NombreUsuario,idJapan) VALUES ('{uid}', '@{uname}','{idOP}')")
-								bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
-							else:
+								c.execute(f"INSERT INTO Usuarios (idUsuario, NombreUsuario, idGlobal) VALUES ('{uid}', '@{uname}','{idOP}')")
+								#bot.send_message(-1001113426399, "EU = 0", parse_mode="Markdown")
+								#bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
+							#else:
 								print("ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0 Y AHORA VOY A COMPROBAR EUG")
+								#bot.send_message(-1001113426399, "ESTOY DEBAJO DEL IF de ENTRE USUARIO = 0 Y AHORA VOY A COMPROBAR EUG", parse_mode="Markdown")
 								EUG = existeUserGru(uid,cid)
 								print(f"Sabemos que EUG vale {EUG}")
 								if(EUG == 0):
 									print("Entro cuando no existe la combinación usuario - grupo")
 									c.execute(f"INSERT INTO UsuGrupo(idUsuarioFK,idGrupoFK,Region) VALUES ('{uid}','{cid}','Global')")
+								#	bot.send_message(-1001113426399, "Entro cuando no existe la combinación usuario - grupo", parse_mode="Markdown")
 									bot.send_message(cid, f"*{uname}* has been added to the DB with Global Pirate ID *{idOP}*.", parse_mode="Markdown")
 								elif(EUG == 1):
 									bot.send_message(cid, "You have already introduced your Global Pirate ID in this group, if you want to edit it use `/edit Global`", parse_mode="Markdown")
 								else:
 									bot.send_message(cid, "Error in EUG.")
 								con.commit()
+							else:
+								bot.send_message(-1001113426399, "patata", parse_mode="Markdown")
 						except sqlite3.Error as e:
 							print(e)
 							bot.send_message(cid, "You have already introduced your Global Pirate ID in this group, if you want to edit it use `/edit Global`", parse_mode="Markdown")
