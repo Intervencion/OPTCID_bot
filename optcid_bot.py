@@ -98,10 +98,10 @@ def listener(messages):
 						rules += "3) Don't spoil.\n"
 						rules += "4) Don't spam.\n"
 						rules += "5) No +18.\n"
-						rules += "6) No acc selling."
+						rules += "6) No acc selling.\n"
 						italian = "[Italian](https://t.me/joinchat/ABzveENpurD6yuLWuTL18Q)"
 						spanish = "[Spanish](https://t.me/joinchat/ABzveENMOZg4ZCXSqfziGA)"
-						rules += "Join our {italian} or {spanish} group!"
+						rules += f"Join our {italian} or {spanish} group!"
 						bot.send_message(cid, f"{bienvenida}{nmusername}\nPlease follow the rules\n{rules}", parse_mode = "Markdown")	
 					elif str(cid) == "-1001129068952": #Spain#
 						bienvenida += f"Bienvenidos a {mct} "
@@ -157,6 +157,43 @@ def command_start(m):
 	comandos += "`/myid` - The format of the command is `/myid Region` where `Region` is `Japan` or `Global`.\n"
 	comandos += "`/del` - The format of the command is `/del Region` where `Region` is `Japan` or `Global`."
 	bot.send_message(cid, comandos, parse_mode="Markdown")
+
+
+@bot.message_handler(commands=['juego'])
+def command_start(m):
+	cid = m.chat.id
+	if str(cid) == "-1001113426399": #One Piece JPN#
+		hashtags = "Hashtags disponibles:\n\n"
+		hashtags += "#tier // tier list de los pjs\n"
+		hashtags += "#barcos //recopilacion de barcos en el juego y lo que hacen\n"
+		hashtags += "#chopper // lista de misiones de super chopper\n"
+		hashtags += "#evento // evento actual del juego\n"
+		hashtags += "#neptuno // ids de neptun\n"
+		hashtags += "#perona // ids de perona\n"
+		hashtags += "#calendario //calendario del mes\n"
+		hashtags += "#agenda // link web con las islas diarias y su drop\n"
+		hashtags += "#bosques // equipos para pasarse los 0 sta\n"
+		hashtags += "#parche // notas de la ultima version\n"
+		hashtags += "#clear // lista de personajes leyendas, raids y su clear rate del juego\n"
+		hashtags += "#Top5 // top5 de personajes dependiendo de su color, clase...\n"
+		hashtags += "#pjs // lista de todos los personajes\n"
+		hashtags += "#coliseo // recopilacion de los coliseo y equipos\n"
+		hashtags += "#fn // fornights\n"
+		hashtags += "#raids // lista de raids y actuales\n"
+		hashtags += "#ambush // teams para los ambush\n"
+		hashtags += "#buffs  // lista de debuff y buff del juego\n"
+		hashtags += "#buenaspersonas // lista de id con amigos con leyendas socketadas cd max y demas\n"
+		hashtags += "#opciones // panel de control del juego\n"
+		hashtags += "#F2P // teams f2p para el juego\n"
+		hashtags += "#sockets // guia de sockets para los diferentes personajes\n"
+		hashtags += "#legends // recopilacion de equipos para las diferentes leyendas\n"
+		hashtags += "#wiki // wiki de reddit\n"
+		hashtags += "#RR // personajes utiles\n"
+		hashtags += "#teams // recopilacion de videos \n"
+		hashtags += "#link // link de invitación al grupo"
+		bot.send_message(cid, hashtags, parse_mode="Markdown")
+	else:
+		print ("patata")
 	
 @bot.message_handler(commands=['eg'])
 def command_eg(m):
@@ -318,6 +355,7 @@ def command_addidOP(m):
 	mct = m.chat.title
 	ufm = m.from_user.first_name
 	ulm = m.from_user.last_name
+	uname = m.from_user.username
 	if (m.from_user.username is None):
 		if (ulm is None):
 			uname = ufm
